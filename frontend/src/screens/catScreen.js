@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useContext, useEffect, useReducer, useState } from 'react';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
@@ -12,8 +12,10 @@ import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { getError } from '../utils';
-import { Store } from '../Store';
 import Unlike from '../components/Unlike';
+import { catsHouse } from '../catsHouse';
+
+
 
 const reducer = (state, action) => {
   //const [likeCount, setLikeCount] = useState(0)
@@ -34,8 +36,7 @@ const reducer = (state, action) => {
 };
 
 function CatScreen() {
-  // const navigate = useNavigate();
-
+   const navigate = useNavigate();
   const params = useParams();
   const [isLogIn, setisLogIn] = useState(false);
   const [catLike, setCatLike] = useState(0);
@@ -108,19 +109,33 @@ function CatScreen() {
     //window.location.reload()
   };
 
-  const { dispatch: ctxDispatch } = useContext(Store);
-  // const { wishlist } = state;
-  const addToWishListHandler = () => {
-    // const existItem = wishlist.wishlistItems.find((x) => x._id === cat._id);
-    // const  = existItem ? existItem.quantity + 1 : 1;
-    // const { data } = await axios.get(`/api/cats/${cat._id}`);
+  // const { state, dispatch: ctxDispatch } = useContext(catsHouse);
+  //const { wishlist } = state;
+  //const addToWishListHandler = async() => {
+  // ctxDispatch({ type: 'WISHLIST_ADD_ITEM', payload: { ...cat, quantity: 1 },
+  // });
+  // const existItem = wishlist.wishlistItems.find((x) => x._id === cat._id);
+  //   const quantity = existItem ? existItem.quantity + 1 : 1;
+  // const { data } = await axios.get(`/api/cats/${cat._id}`);
 
+  //};
+  const { state, dispatch: ctxDispatch } = useContext(catsHouse);
+  const { wishlist } = state;
+  const addToWishListHandler = async () => {
+    const existItem = wishlist.wishlistItems.find((x) => x._id === cat._id);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    const { data } = await axios.get(`/api/cats/${cat._id}`);
+    if (data.countInStock < quantity) {
+      window.alert('Sorry. Cat is out of stock');
+      return;
+    }
     ctxDispatch({
       type: 'WISHLIST_ADD_ITEM',
-      payload: { ...cat, quantity: 1 },
+      payload: { ...cat, quantity },
     });
+    navigate('/wishlist');
   };
-  // navigate('/wishlist');
+  
   return loading ? (
     <LoadingBox />
   ) : error ? (
@@ -185,13 +200,13 @@ function CatScreen() {
                         onClick={likeCountHandler}
                         className="btn-primary1"
                       >
-                        👍
+                        Like 👍
                       </button>
                       <button
                         onClick={unlikeCountHandler}
                         className="btn-primary2"
                       >
-                        👎
+                        Dislike 👎
                       </button>
 
                       <Button onClick={addToWishListHandler} variant="primary">
@@ -206,9 +221,27 @@ function CatScreen() {
             </Card.Body>
           </Card>
         </Col>
-      </Row>
-    </div>
+      </Row> 
+        <br />
+        <div className="mapouter">
+          <div className="gmap_canvas">
+            <iframe
+              width="100%"
+              height="500"
+              id="gmap_canvas"
+              src="https://maps.google.com/maps?q=piliyandala&t=&z=13&ie=UTF8&iwloc=&output=embed"
+              frameBorder="0"
+              scrolling="no"
+              marginHeight="0"
+              marginWidth="0"
+              title="aaaa"
+            ></iframe>
+            {/* <a href="https://fmovies-online.net"></a> */}
+            <br />
+          </div>
+        </div>
+        <br />
+      </div>
   );
 }
-
 export default CatScreen;

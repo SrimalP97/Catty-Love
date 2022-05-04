@@ -12,6 +12,7 @@ catRouter.get('/Cat_id/:Cat_id', async (req, res) => {
   const cats = await cat.findOne({ Cat_id: req.params.Cat_id });
   if (cats) {
     res.send(cats);
+    res.status(200);
   } else {
     res.status(404).send({ message: '404 Not Found !!!' });
   }
@@ -56,11 +57,9 @@ catRouter.get('/cat_unlike/:Cat_id', async (req, res) => {
   const cats = await cat.findOne({ Cat_id: req.params.Cat_id });
 
   cats.unlikes++;
-  cats.Likes--;
-
   await cats.save();
 
-  res.status(200).send({ message: '404 Not Found !!!' });
+  res.status(404).send({ message: '404 Not Found !!!' });
 });
 
 export default catRouter;
