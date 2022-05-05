@@ -33,6 +33,7 @@ catRouter.post('/cat_like/:Cat_id', async (req, res) => {
     const cats = await cat.findOne({ Cat_id: req.params.Cat_id });
     console.log('userId', userId);
     console.log('cats', cats);
+
     let isUserLiked = cats.Likeduser.includes(userId.toString());
 
     if (isUserLiked) {
