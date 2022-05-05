@@ -1,24 +1,6 @@
-import bcrypt from 'bcryptjs';
-
 const data = {
-  users: [
-    {
-      name: 'srimal',
-      email: 'admin@example.com',
-      password: bcrypt.hashSync('12345'),
-      isAdmin: true,
-    },
-    {
-      name: 'Sahan',
-      email: 'user@example.com',
-      password: bcrypt.hashSync('12345'),
-      isAdmin: false,
-    },
-  ],
-
   cats: [
     {
-      // _id: '1',
       Cat_id: 'c1',
       name: ' Snoowy',
       age: '2yr',
@@ -27,14 +9,10 @@ const data = {
       image: '/images/cat1.jpg',
       contact: '0768057625',
       Likes: 10,
-      unlikes: 5,
-      Likeduser: [],
-      unlikeduser: [],
       numReviews: 11,
-      Geolocation: 'Matara',
+      Geolocation: '',
     },
     {
-      //_id: '2',
       Cat_id: 'c2',
       name: ' Mark',
       age: '2yr',
@@ -43,15 +21,11 @@ const data = {
       image: '/images/cat2.jpg',
       contact: '0776557625',
       Likes: 20,
-      unlikes: 5,
-      Likeduser: [],
-      unlikeduser: [],
       numReviews: 21,
-      Geolocation: 'Galle',
+      Geolocation: '',
     },
 
     {
-     // _id: '3',
       Cat_id: 'c3',
       name: ' Cherry',
       age: '3yr',
@@ -60,15 +34,11 @@ const data = {
       image: '/images/cat3.jpg',
       contact: '0776557325',
       Likes: 30,
-      unlikes: 5,
-      Likeduser: [],
-      unlikeduser: [],
       numReviews: 31,
-      Geolocation: 'Colombo',
+      Geolocation: '',
     },
 
     {
-      // _id: '4',
       Cat_id: 'c4',
       name: ' Dumble',
       age: '3yr',
@@ -77,12 +47,10 @@ const data = {
       image: '/images/cat4.jpg',
       contact: '0756557625',
       Likes: 40,
-      unlikes: 5,
-      Likeduser: [],
-      unlikeduser: [],
       numReviews: 41,
-      Geolocation: 'Kandy',
+      Geolocation: '',
     },
   ],
 };
 export default data;
+//export default data;

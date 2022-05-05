@@ -7,7 +7,8 @@ import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useContext } from 'react';
-import { Store } from './Store';
+import { catsHouse } from './catsHouse';
+import WishListScreen from './screens/WishListScreen';
 import SigninScreen from './screens/SigninScreen';
 import { ToastContainer } from 'react-toastify';
 import NavDropdown from 'react-bootstrap/NavDropdown';
@@ -16,8 +17,9 @@ import SignupScreen from './screens/SignupScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SearchBox from './components/SearchBox';
 
+
 function App() {
-  const { state, dispatch: ctxDispatch } = useContext(Store);
+  const { state, dispatch: ctxDispatch } = useContext(catsHouse);
   const { wishlist, userInfo } = state;
 
   const signoutHandler = () => {
@@ -46,7 +48,7 @@ function App() {
                   WishList
                   {wishlist.wishlistItems.length > 0 && (
                     <Badge pill bg="danger">
-                      {wishlist.wishlistItems.length}
+                      {wishlist.wishlistItems.reduce((a, c) => a + c.quantity, 0)}
                     </Badge>
                   )}
                 </Link>
@@ -80,7 +82,7 @@ function App() {
             <Routes>
               <Route path="/cat/:Cat_id" element={<CatScreen />} />
               <Route path="/signin" element={<SigninScreen />} />
-              <Route path="/wishlist" element={<wishlistScreen />} />
+              <Route path="/wishlist" element={<WishListScreen />} />
               <Route path="/" element={<HomeScreen />} />
               <Route path="/signup" element={<SignupScreen />} />
               <Route path="/profile" element={<ProfileScreen />} />
