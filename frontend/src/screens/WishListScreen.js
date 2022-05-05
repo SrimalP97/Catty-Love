@@ -6,9 +6,7 @@ import Col from 'react-bootstrap/Col';
 import MessageBox from '../components/MessageBox';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
-//import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
-//import axios from 'axios';
 
 export default function WishListScreen() {
  // const navigate = useNavigate();
@@ -17,25 +15,10 @@ export default function WishListScreen() {
     wishlist: { wishlistItems },
   } = state;
 
-/*   const updateWishListHandler = async (item, quantity) => {
-    const { data } = await axios.get(`/api/cats/${item._id}`);
-    if (data.countInStock < quantity) {
-      window.alert('Sorry. Cat is out of stock');
-      return;
-    }
-    ctxDispatch({
-      type: 'WISHLIST_ADD_ITEM',
-      payload: { ...item, quantity },
-    });
-  }; */
   const removeItemHandler = (item) => {
     ctxDispatch({ type: 'WISHLIST_REMOVE_ITEM', payload: item });
   };
 
- /*  const checkoutHandler = () => {
-    navigate('/signin?redirect=/shipping');
-  };
- */
   return (
     <div>
       <Helmet>
@@ -62,27 +45,7 @@ export default function WishListScreen() {
                       <Link to={`/cat/${item._id}`}>{item.name}</Link>
                     </Col>
                     <Col md={3}>{item.contact}</Col>
-{/*                     <Col md={3}>
-                      <Button
-                        onClick={() =>
-                          updateWishListHandler(item, item.quantity - 1)
-                        }
-                        variant="light"
-                        disabled={item.quantity === 1}
-                      >
-                        <i className="fas fa-minus-circle"></i>
-                      </Button>{' '}
-                      <span>{item.quantity}</span>{' '}
-                      <Button
-                        variant="light"
-                        onClick={() =>
-                          updateWishListHandler(item, item.quantity + 1)
-                        }
-                        disabled={item.quantity === item.countInStock}
-                      >
-                        <i className="fas fa-plus-circle"></i>
-                      </Button>
-                    </Col> */}
+                      {}
                     <Col md={3}>{item.Geolocation}</Col>
                     <Col md={2}>
                       <Button
@@ -98,37 +61,7 @@ export default function WishListScreen() {
             </ListGroup>
           )}
         </Col>
-        {/* <Col md={4}>
-          <Card>
-            <Card.Body>
-              <ListGroup variant="flush">
-                <ListGroup.Item>
-                  <h3>
-                    Subtotal (
-                    {wishlistItems.reduce((a, c) => a + c.quantity, 0)} items) :
-                    $
-                    {wishlistItems.reduce(
-                      (a, c) => a + c.price * c.quantity,
-                      0
-                    )}
-                  </h3>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <div className="d-grid">
-                    <Button
-                      type="button"
-                      variant="primary"
-                      onClick={checkoutHandler}
-                      disabled={wishlistItems.length === 0}
-                    >
-                      Proceed to Checkout
-                    </Button>
-                  </div>
-                </ListGroup.Item>
-              </ListGroup>
-            </Card.Body>
-          </Card>
-        </Col> */}
+        {}
       </Row>
     </div>
   );

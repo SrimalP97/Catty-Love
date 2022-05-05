@@ -1,20 +1,25 @@
 import axios from 'axios';
-import { useEffect, useReducer, useState } from 'react';
+import { useContext, useEffect, useReducer, useState } from 'react';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import Like from '../components/Like';
+//import Review from '../components/Review';
 import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { getError } from '../utils';
-//import { Store } from '../Store';
-import React from 'react';
+import Unlike from '../components/Unlike';
+import { catsHouse } from '../catsHouse';
+import Commentbox from "../components/Commentbox";
+
 
 const reducer = (state, action) => {
+  //const [likeCount, setLikeCount] = useState(0)
+
   switch (action.type) {
     case 'FETCH_REQUEST':
       return { ...state, loading: true };
@@ -31,8 +36,7 @@ const reducer = (state, action) => {
 };
 
 function CatScreen() {
-  // const navigate = useNavigate();
-
+   const navigate = useNavigate();
   const params = useParams();
   const [isLogIn, setisLogIn] = useState(false);
   const [catLike, setCatLike] = useState(0);
@@ -75,83 +79,63 @@ function CatScreen() {
   }, [Cat_id]);
 
   const likeCountHandler = async () => {
-    //let Cat_id = 'c1';
-    let loogedUser = JSON.parse(localStorage.getItem('userInfo'));
-    console.log('loogedUser', loogedUser);
-    console.log('loogedUserID', loogedUser._id);
-    let result;
-    if (
-      localStorage.getItem('userInfo') != null ||
-      localStorage.getItem('userInfo') !== undefined
-    ) {
-      result = await axios.post(`/api/cats/cat_like/${Cat_id}`, {
-        userId: loogedUser._id,
-      });
-      console.log('result.data.dat', result.data);
-      if (result.data.status === 'OK') {
-        // alert(result.data.message);
-        console.log('likeCountHandler', result);
-        let ctl = catLike;
-        let ctunl = catunLike;
-        ctl += 1;
-        //ctunl--;
-        if (ctl > -1) {
-          setcatunLike(ctunl);
-        }
-        setCatLike(ctl);
-      } else if (
-        result.data.status !== undefined &&
-        result.data.status === 'error'
-      ) {
-        // alert(result.data.message);
-      } else {
-        // alert('Please login before Like');
-      }
-    }
+    let Cat_id = 'c1';
+    //alert('Liked');
+    const result = await axios.get(`/api/cats/cat_like/${Cat_id}`);
+    console.log('likeCountHandler', result);
+    let ctl = catLike;
+    ctl += 1;
+    setCatLike(ctl);
+    // window.location.reload();
+    // send request to back end to like router method
+    //if axiose request  success update the ui like coutn
+    //if needed add tost message
+    // page refresh
   };
 
   const unlikeCountHandler = async () => {
-    let loogedUser = JSON.parse(localStorage.getItem('userInfo'));
-    console.log('loogedUser', loogedUser);
-    console.log('loogedUserID', loogedUser._id);
-    let result;
-    if (
-      localStorage.getItem('userInfo') != null ||
-      localStorage.getItem('userInfo') !== undefined
-    ) {
-      result = await axios.post(`/api/cats/cat_unlike/${Cat_id}`, {
-        userId: loogedUser._id,
-      });
-      console.log('result.data.dat', result.data);
-      if (result.data.status === 'OK') {
-        // alert(result.data.message);
-        console.log('unlikeCountHandler', result);
-        let ctul = catunLike;
-        let clike = catLike;
-        ctul += 1;
-        clike -= 1;
-        setcatunLike(ctul);
-        setCatLike(clike);
-      } else if (
-        result.data.status !== undefined &&
-        result.data.status === 'error'
-      ) {
-        // alert(result.data.message);
-      } else {
-        // alert('Please login before unLike');
-      }
-    }
+    let Cat_id = 'c1';
+    // alert('UnLiked');
+    const result = await axios.get(`/api/cats/cat_unlike/${Cat_id}`);
+    console.log('unlikeCountHandler', result);
+    let ctul = catunLike;
+    ctul += 1;
+    setcatunLike(ctul);
+    //window.location.reload();
+    // send request to back end to Unlike router method
+    //if axiose request  success update the ui Unlike coutn
+    //if needed add tost message
+    // page refresh
+    //window.location.reload()
   };
 
-  // const { dispatch: ctxDispatch } = useContext(Store);
+  // const { state, dispatch: ctxDispatch } = useContext(catsHouse);
+  //const { wishlist } = state;
+  //const addToWishListHandler = async() => {
+  // ctxDispatch({ type: 'WISHLIST_ADD_ITEM', payload: { ...cat, quantity: 1 },
+  // });
+  // const existItem = wishlist.wishlistItems.find((x) => x._id === cat._id);
+  //   const quantity = existItem ? existItem.quantity + 1 : 1;
+  // const { data } = await axios.get(`/api/cats/${cat._id}`);
 
-  // const addToWishListHandler = () => {
-  //   ctxDispatch({
-  //     type: 'WISHLIST_ADD_ITEM',
-  //     payload: { ...cat, quantity: 1 },
-  //   });
-  // };
-  // navigate('/wishlist');
+  //};
+  const { state, dispatch: ctxDispatch } = useContext(catsHouse);
+  const { wishlist } = state;
+  const addToWishListHandler = async () => {
+    const existItem = wishlist.wishlistItems.find((x) => x._id === cat._id);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    const { data } = await axios.get(`/api/cats/${cat._id}`);
+    if (data.countInStock < quantity) {
+      window.alert('Sorry. Cat is out of stock');
+      return;
+    }
+    ctxDispatch({
+      type: 'WISHLIST_ADD_ITEM',
+      payload: { ...cat, quantity },
+    });
+    navigate('/wishlist');
+  };
+  
   return loading ? (
     <LoadingBox />
   ) : error ? (
@@ -205,29 +189,29 @@ function CatScreen() {
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
-                    {/* <Unlike>unlikes:</Unlike> */}
-                    {/* <Col>{catunLike}</Col> */}
+                    <Unlike>unlikes:</Unlike>
+                    <Col>{cat.unlikes}</Col>
                   </Row>
                 </ListGroup.Item>
                 {isLogIn === true ? (
                   <ListGroup.Item>
-                    <div className="">
+                    <div className="d-grid">
                       <button
                         onClick={likeCountHandler}
                         className="btn-primary1"
                       >
-                        👍
+                        Like 👍
                       </button>
                       <button
                         onClick={unlikeCountHandler}
                         className="btn-primary2"
                       >
-                        👎
+                        Dislike 👎
                       </button>
-                      <Col></Col>
-                      <Col></Col> <br></br>
-                      <Button variant="primary">Add to Wishlist</Button>
-                      {/* onClick={addToWishListHandler}  */}
+
+                      <Button onClick={addToWishListHandler} variant="primary">
+                        Add to Wishlist
+                      </Button>
                     </div>
                   </ListGroup.Item>
                 ) : (
@@ -237,9 +221,28 @@ function CatScreen() {
             </Card.Body>
           </Card>
         </Col>
-      </Row>
-    </div>
+      </Row> 
+        <br />
+        <div className="mapouter">
+          <div className="gmap_canvas">
+            <iframe
+              width="100%"
+              height="500"
+              id="gmap_canvas"
+              src="https://maps.google.com/maps?q=piliyandala&t=&z=13&ie=UTF8&iwloc=&output=embed"
+              frameBorder="0"
+              scrolling="no"
+              marginHeight="0"
+              marginWidth="0"
+              title="aaaa"
+            ></iframe>
+            {/* <a href="https://fmovies-online.net"></a> */}
+            <br />
+          </div>
+        </div>
+        <br />
+        <Commentbox comentObject={cat.comment} catId={cat._id}></Commentbox>
+      </div>
   );
 }
-
 export default CatScreen;

@@ -10,7 +10,7 @@ const initialState = {
   },
 };
 
-//**wishlist function
+
 function reducer(state, action) {
   switch (action.type) {
     case 'WISHLIST_ADD_ITEM':
@@ -32,27 +32,26 @@ function reducer(state, action) {
       );
       localStorage.setItem('wishlistItems', JSON.stringify(wishlistItems));
       return { ...state, wishlist: { ...state.wishlist, wishlistItems } };
-      /*     }
+/*     }
     default:
       return state; */
-    }
-    case 'USER_SIGNIN':
-      return { ...state, userInfo: action.payload };
-    case 'USER_SIGNOUT':
-      return {
-        ...state,
-        userInfo: null,
-      };
+  }
+case 'USER_SIGNIN':
+  return { ...state, userInfo: action.payload };
+case 'USER_SIGNOUT':
+  return {
+    ...state,
+    userInfo: null,
+  };
 
-    default:
-      return state;
+default:
+  return state;
   }
 }
 
 export function CatsHouseProvider(props) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const value = { state, dispatch };
-  return (
-    <catsHouse.Provider value={value}>{props.children} </catsHouse.Provider>
-  );
+  return <catsHouse.Provider value={value}>{props.children} </catsHouse.Provider>;
+  
 }

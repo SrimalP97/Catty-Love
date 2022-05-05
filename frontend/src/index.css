@@ -62,34 +62,8 @@ main {
 
 .btn-primary1 {
   color: #1515ff;
-  border: none;
-
-  transition-duration: 0.4s;
-  width: 25%;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-}
-
-.btn-primary1:hover {
-  background-color: #1515ff;
-  color: white;
 }
 
 .btn-primary2 {
   color: #ff0000;
-  width: 25%;
-  border: none;
-
-  transition-duration: 0.4s;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-}
-
-.btn-primary2:hover {
-  background-color: #ff0000;
-  color: white;
 }

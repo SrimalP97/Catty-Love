@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import seedRouter from './routes/seedRoutes.js';
 import catRouter from './routes/catRoutes.js';
 import userRouter from './routes/userRoutes.js';
+//import wishlistRouter from './routes/wishlistRouter.js';
+
 
 dotenv.config();
 
@@ -26,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/seed', seedRouter);
 app.use('/api/cats', catRouter);
 app.use('/api/users', userRouter);
+//app.use('/api/wishlist', wishlistRouter);
 
 app.use((err, req, res, next) => {
   res.status(500).send({ message: err.message });
