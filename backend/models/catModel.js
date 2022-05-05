@@ -10,6 +10,8 @@ const catSchema = new mongoose.Schema(
     image: { type: String, required: true },
     contact: { type: String, required: true },
     Likes: { type: Number, required: true },
+    Likeduser: [String],
+    unlikeduser: [String],
     unlikes: { type: Number, required: true },
     numReviews: { type: Number, required: true },
     Geolocation: { type: String, required: true },

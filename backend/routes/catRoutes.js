@@ -26,41 +26,94 @@ catRouter.get('/:id', async (req, res) => {
   }
 });
 
-catRouter.get('/cat_like/:Cat_id', async (req, res) => {
-  //const cats = await cat.findOne({ Cat_id: req.params.Cat_id });
-  // cat.like++
-  //console.log('Cat Likes', cats);
-  console.log('req.params.Cat_id ', req.params.Cat_id);
-  // if (cats) {
-  //   res.send(cats);
+catRouter.post('/cat_like/:Cat_id', async (req, res) => {
+  try {
+    const { userId } = req.body;
 
-  const cats = await cat.findOne({ Cat_id: req.params.Cat_id });
+    const cats = await cat.findOne({ Cat_id: req.params.Cat_id });
+    console.log('userId', userId);
+    console.log('cats', cats);
+    let isUserLiked = cats.Likeduser.includes(userId.toString());
 
-  cats.Likes++;
-  await cats.save();
+    if (isUserLiked) {
+      return res.json({
+        status: 'error',
+        message: 'Already Liked',
+      });
+    }
 
-  res.status(200).send({ message: '404 Not Found !!!' });
-  // } else {
-  //   res.status(404).send({ message: '404 Not Found !!!' });
-  // }
+    if (cats) {
+      cats.Likeduser.push(userId);
+      cats.Likes++;
+      await cats.save();
+    } else {
+      return res.json({
+        status: 'error',
+        message: 'No cat found for the given id',
+      });
+    }
+
+    res.status(200).send({ status: 'OK', message: 'Successfull' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error', err: error });
+  }
 });
 
-catRouter.get('/cat_unlike/:Cat_id', async (req, res) => {
-  //const cats = await cat.findOne({ Cat_id: req.params.Cat_id });
-  // cat.unlike++
-  // if (cats) {
-  //   res.send(cats);
-  // } else {
-  //   res.status(404).send({ message: '404 Not Found !!!' });
-  //  }
-  const cats = await cat.findOne({ Cat_id: req.params.Cat_id });
+catRouter.post('/cat_unlike/:Cat_id', async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const cats = await cat.findOne({ Cat_id: req.params.Cat_id });
+    console.log('userId', userId);
+    console.log('cats', cats);
 
-  cats.unlikes++;
-  cats.Likes--;
+    let isUserLiked = cats.Likeduser.includes(userId.toString());
+    let isUserunLiked = cats.unlikeduser.includes(userId.toString());
 
-  await cats.save();
+    if (isUserLiked) {
+      cats.unlikeduser.push(userId);
+      cats.unlike++;
+      cats.likes--;
+      await cats.save();
+    }
 
-  res.status(200).send({ message: '404 Not Found !!!' });
+    if (isUserunLiked) {
+      cats.unlikeduser.push(userId);
+      return res.json({
+        status: 'error',
+        message: 'Already UnLiked',
+      });
+    }
+
+    if (cats) {
+      cats.unlikeduser.push(userId);
+      cats.unlike++;
+      cats.likes--;
+      await cats.save();
+    } else {
+      return res.json({
+        status: 'error',
+        message: 'No cat found for the given id',
+      });
+    }
+
+    if (cats) {
+      cats.Likeduser.push(userId);
+      cats.unlike++;
+
+      await cats.save();
+    } else {
+      return res.json({
+        status: 'error',
+        message: 'No cat found for the given id',
+      });
+    }
+
+    res.status(200).send({ status: 'OK', message: 'Successfull' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error', err: error });
+  }
 });
 
 export default catRouter;

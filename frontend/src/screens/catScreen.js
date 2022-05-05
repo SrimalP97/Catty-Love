@@ -7,17 +7,13 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import Like from '../components/Like';
-//import Review from '../components/Review';
 import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { getError } from '../utils';
 import { Store } from '../Store';
-import Unlike from '../components/Unlike';
 
 const reducer = (state, action) => {
-  //const [likeCount, setLikeCount] = useState(0)
-
   switch (action.type) {
     case 'FETCH_REQUEST':
       return { ...state, loading: true };
@@ -78,43 +74,77 @@ function CatScreen() {
   }, [Cat_id]);
 
   const likeCountHandler = async () => {
-    let Cat_id = 'c1';
-    //alert('Liked');
-    const result = await axios.get(`/api/cats/cat_like/${Cat_id}`);
-    console.log('likeCountHandler', result);
-    let ctl = catLike;
-    ctl += 1;
-    setCatLike(ctl);
-    // window.location.reload();
-    // send request to back end to like router method
-    //if axiose request  success update the ui like coutn
-    //if needed add tost message
-    // page refresh
+    //let Cat_id = 'c1';
+    let loogedUser = JSON.parse(localStorage.getItem('userInfo'));
+    console.log('loogedUser', loogedUser);
+    console.log('loogedUserID', loogedUser._id);
+    let result;
+    if (
+      localStorage.getItem('userInfo') != null ||
+      localStorage.getItem('userInfo') !== undefined
+    ) {
+      result = await axios.post(`/api/cats/cat_like/${Cat_id}`, {
+        userId: loogedUser._id,
+      });
+      console.log('result.data.dat', result.data);
+      if (result.data.status === 'OK') {
+        // alert(result.data.message);
+        console.log('likeCountHandler', result);
+        let ctl = catLike;
+        let ctunl = catunLike;
+        ctl += 1;
+        //ctunl--;
+        if (ctl > -1) {
+          setcatunLike(ctunl);
+        }
+        setCatLike(ctl);
+      } else if (
+        result.data.status !== undefined &&
+        result.data.status === 'error'
+      ) {
+        // alert(result.data.message);
+      } else {
+        // alert('Please login before Like');
+      }
+    }
   };
 
   const unlikeCountHandler = async () => {
-    let Cat_id = 'c1';
-    // alert('UnLiked');
-    const result = await axios.get(`/api/cats/cat_unlike/${Cat_id}`);
-    console.log('unlikeCountHandler', result);
-    let ctul = catunLike;
-    ctul += 1;
-    setcatunLike(ctul);
-    //window.location.reload();
-    // send request to back end to Unlike router method
-    //if axiose request  success update the ui Unlike coutn
-    //if needed add tost message
-    // page refresh
-    //window.location.reload()
+    let loogedUser = JSON.parse(localStorage.getItem('userInfo'));
+    console.log('loogedUser', loogedUser);
+    console.log('loogedUserID', loogedUser._id);
+    let result;
+    if (
+      localStorage.getItem('userInfo') != null ||
+      localStorage.getItem('userInfo') !== undefined
+    ) {
+      result = await axios.post(`/api/cats/cat_unlike/${Cat_id}`, {
+        userId: loogedUser._id,
+      });
+      console.log('result.data.dat', result.data);
+      if (result.data.status === 'OK') {
+        // alert(result.data.message);
+        console.log('unlikeCountHandler', result);
+        let ctul = catunLike;
+        let clike = catLike;
+        ctul += 1;
+        clike -= 1;
+        setcatunLike(ctul);
+        setCatLike(clike);
+      } else if (
+        result.data.status !== undefined &&
+        result.data.status === 'error'
+      ) {
+        // alert(result.data.message);
+      } else {
+        // alert('Please login before unLike');
+      }
+    }
   };
 
   const { dispatch: ctxDispatch } = useContext(Store);
-  // const { wishlist } = state;
-  const addToWishListHandler = () => {
-    // const existItem = wishlist.wishlistItems.find((x) => x._id === cat._id);
-    // const  = existItem ? existItem.quantity + 1 : 1;
-    // const { data } = await axios.get(`/api/cats/${cat._id}`);
 
+  const addToWishListHandler = () => {
     ctxDispatch({
       type: 'WISHLIST_ADD_ITEM',
       payload: { ...cat, quantity: 1 },
@@ -174,13 +204,13 @@ function CatScreen() {
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
-                    <Unlike>unlikes:</Unlike>
-                    <Col>{cat.unlikes}</Col>
+                    {/* <Unlike>unlikes:</Unlike> */}
+                    {/* <Col>{catunLike}</Col> */}
                   </Row>
                 </ListGroup.Item>
                 {isLogIn === true ? (
                   <ListGroup.Item>
-                    <div className="d-grid">
+                    <div className="">
                       <button
                         onClick={likeCountHandler}
                         className="btn-primary1"
@@ -193,7 +223,8 @@ function CatScreen() {
                       >
                         👎
                       </button>
-
+                      <Col></Col>
+                      <Col></Col> <br></br>
                       <Button onClick={addToWishListHandler} variant="primary">
                         Add to Wishlist
                       </Button>
