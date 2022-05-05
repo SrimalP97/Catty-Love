@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useContext, useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import { useParams } from 'react-router-dom';
@@ -11,7 +11,7 @@ import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { getError } from '../utils';
-import { Store } from '../Store';
+//import { Store } from '../Store';
 import React from 'react';
 
 const reducer = (state, action) => {
@@ -143,14 +143,14 @@ function CatScreen() {
     }
   };
 
-  const { dispatch: ctxDispatch } = useContext(Store);
+  // const { dispatch: ctxDispatch } = useContext(Store);
 
-  const addToWishListHandler = () => {
-    ctxDispatch({
-      type: 'WISHLIST_ADD_ITEM',
-      payload: { ...cat, quantity: 1 },
-    });
-  };
+  // const addToWishListHandler = () => {
+  //   ctxDispatch({
+  //     type: 'WISHLIST_ADD_ITEM',
+  //     payload: { ...cat, quantity: 1 },
+  //   });
+  // };
   // navigate('/wishlist');
   return loading ? (
     <LoadingBox />
@@ -226,9 +226,8 @@ function CatScreen() {
                       </button>
                       <Col></Col>
                       <Col></Col> <br></br>
-                      <Button onClick={addToWishListHandler} variant="primary">
-                        Add to Wishlist
-                      </Button>
+                      <Button variant="primary">Add to Wishlist</Button>
+                      {/* onClick={addToWishListHandler}  */}
                     </div>
                   </ListGroup.Item>
                 ) : (
